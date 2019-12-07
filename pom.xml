@@ -7,7 +7,7 @@
 	<artifactId>hbs_decipher</artifactId>
 	<version>1.0</version>
 	<packaging>jar</packaging>
-	
+
 	<properties>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
@@ -24,11 +24,16 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.11</version>
 		</dependency>
+		<dependency>
+		  <groupId>org.bouncycastle</groupId>
+		  <artifactId>bcprov-jdk15on</artifactId>
+		  <version>1.61</version>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-	
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -55,6 +60,24 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.oracle.substratevm</groupId>
+				<artifactId>native-image-maven-plugin</artifactId>
+				<version>19.2.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>native-image</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+                <configuration>
+                    <imageName>hbs_decipher</imageName>
+                    <mainClass>qnapdecrypt.QNAPFileDecrypter</mainClass>
+                    <buildArgs>--no-server --no-fallback --enable-all-security-services -J-Djava.security.properties=java.security.overrides</buildArgs>
+                </configuration>
 			</plugin>
 		</plugins>
 	</build>
